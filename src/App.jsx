@@ -1,6 +1,6 @@
-import './App.css'
 import { Contenedor } from './components/Contenedor'
 import 'bootstrap/dist/css/bootstrap.min.css';
+// import { Sidebar } from './components/Sidebar';
 
 function App() {
 
