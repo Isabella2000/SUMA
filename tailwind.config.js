@@ -6,7 +6,8 @@ export default {
   theme: {
     extend: {
       colors:{
-        'primaryYellow':'#f2c302'
+        'primaryYellow':'#f2c302',
+        'secundaryYellow':'#F0C81F'
       }
     },
   },
