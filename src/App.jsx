@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AuthProvider from "../context/AuthProvider.jsx";
 import Login from "./components/Login.jsx";
-import { Sidebar } from "./components/Sidebar.jsx";
+import Navbar from "./components/Navbar.jsx";
 
 const App = () => {
   return (
@@ -9,7 +9,7 @@ const App = () => {
       <AuthProvider>
         <Routes>
           <Route index element={<Login />} />
-          <Route path="/sidebar" element={<Sidebar />} />
+          <Route path="/navbar" element={<Navbar />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>
