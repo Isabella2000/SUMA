@@ -19,16 +19,16 @@ const AuthProvider = ({ children }) => {
     setAuthModulos(modulos)
   }, [])
 
-  const guardar_sesion =(data)=>{
-    const {usuario, modulos}=data
+  const guardar_sesion = (data) => {
+    const { usuario, modulos } = data
     setAuthUsuario(usuario)
     setAuthModulos(modulos)
     localStorage.setItem("usuario", JSON.stringify(usuario));
     localStorage.setItem("modulos", JSON.stringify(modulos));
-    navigate("/layout")
+    navigate("/home")
   }
-  
-  const handle_salir = () => {
+
+  const cerrar_salir = () => {
     setAuthUsuario({})
     localStorage.setItem('usuario', JSON.stringify({}))
     localStorage.setItem('modulos', JSON.stringify([]))
@@ -38,7 +38,11 @@ const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ authUsuario, setAuthUsuario, authModulos, setAuthModulos, handle_salir, guardar_sesion }}
+      value={{
+        authUsuario, setAuthUsuario,
+        authModulos, setAuthModulos,
+        cerrar_salir, guardar_sesion
+      }}
     >
       {children}
     </AuthContext.Provider>

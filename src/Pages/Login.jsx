@@ -5,13 +5,14 @@ import Error from "../components/Error"
 import useAuth from '../hooks/useAuth'
 import conexionCliente from '../config/ConexionCliente'
 import ReCAPTCHA from "react-google-recaptcha";
+import { Eye } from 'lucide-react';
+import { InputGroup, Input, InputGroupText } from 'reactstrap';
 
 
 const Login = () => {
-    const {authUsuario, guardar_sesion } = useAuth()
+    const { authUsuario, guardar_sesion } = useAuth()
 
     const captcha = useRef(null)
-    const captchakey = import.meta.env.VITE_CAPTCHA_KEY
 
     const [usuario, setUsuario] = useState("")
     const [clave, setClave] = useState("")
@@ -21,12 +22,9 @@ const Login = () => {
         e.preventDefault();
         if ([usuario, clave].includes("")) {
             setError({ error: true, message: "Hay campos vacios" })
-            setTimeout(() => {
-                setError({ error: false, message: "" })
-            }, 1500)
-
+            setTimeout(() => setError({ error: false, message: "" }), 1500)
+            return
         } else {
-            setError({ error: false, message: "" })
             const body = {
                 "usuario": usuario,
                 "clave": clave,
@@ -39,20 +37,17 @@ const Login = () => {
 
                 if (data?.error) {
                     setError({ error: true, message: data.message })
-                    setUsuario("")
-                    setClave("")
-                    setTimeout(() => {
-                        setError({ error: false, message: "" })
-                    }, 1500)
+                    setTimeout(() => setError({ error: false, message: "" }), 1500)
                     return
                 }
+
+                console.log(data)
+
                 guardar_sesion(data)
 
             } catch (error) {
-                setError({ error: true, message:"Ha ocurrido un error" })
-                setTimeout(() => {
-                    setError({ error: false, message: "" })
-                }, 1500)
+                setError({ error: true, message: "Ha ocurrido un error" })
+                setTimeout(() => setError({ error: false, message: "" }), 1500)
                 return
             }
         }
@@ -63,7 +58,7 @@ const Login = () => {
         <>
             {
                 authUsuario.id_usuario ?
-                    <Navigate to="/layout" />
+                    <Navigate to="/home" />
                     :
                     <div className="h-screen flex items-center justify-center container mx-auto ">
                         <div className='flex bg-white rounded-lg shadow-xl max-w-5xl flex-wrap' >
@@ -76,14 +71,21 @@ const Login = () => {
                                         <input className="w-full px-3 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-yellow-200" type="text" id="usuario" placeholder="Usuario" onChange={(e) => setUsuario(e.target.value)} value={usuario} />
                                     </div>
 
-                                    <div>
+                                    {/* <div>
                                         <input className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-200" type="password" id="contrasena" placeholder="Contraseña" onChange={(e) => setClave(e.target.value)} value={clave} />
-                                    </div>
+                                    </div> */}
+
+                                    <InputGroup>
+                                        <Input placeholder="Contraseña" className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-200" type="password" id="contrasena" onChange={(e) => setClave(e.target.value)} value={clave} />
+                                        <InputGroupText>
+                                            <Eye />
+                                        </InputGroupText>
+                                    </InputGroup>
 
                                     <div className='recaptcha self-center'>
                                         <ReCAPTCHA
                                             ref={captcha}
-                                            sitekey={captchakey}
+                                            sitekey={import.meta.env.VITE_CAPTCHA_KEY}
                                         />
                                     </div>
 

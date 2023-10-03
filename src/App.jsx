@@ -15,7 +15,7 @@ const App = () => {
         
         {/* <GlobalProvider> */}
         <Routes>
-          <Route path="/layout" element={<Layout />} />
+          <Route path="/home" element={<Layout />} />
         </Routes>
         {/* </GlobalProvider> */}
 
