@@ -1,17 +1,14 @@
 import '../App.css'
-import axios from 'axios'
 import { useRef, useState } from "react"
-import { useNavigate, Navigate } from "react-router-dom"
-import Error from "./Error"
-import useAuth from '../../hooks/useAuth'
+import { Navigate } from "react-router-dom"
+import Error from "../components/Error"
+import useAuth from '../hooks/useAuth'
+import conexionCliente from '../config/ConexionCliente'
 import ReCAPTCHA from "react-google-recaptcha";
 
 
 const Login = () => {
-
-    const navigate = useNavigate()
-
-    const { setAuthUsuario, setAuthPerfil, authUsuario } = useAuth()
+    const {authUsuario, guardar_sesion } = useAuth()
 
     const captcha = useRef(null)
     const captchakey = import.meta.env.VITE_CAPTCHA_KEY
@@ -23,8 +20,6 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if ([usuario, clave].includes("")) {
-            console.log("campos vacios")
-
             setError({ error: true, message: "Hay campos vacios" })
             setTimeout(() => {
                 setError({ error: false, message: "" })
@@ -32,7 +27,6 @@ const Login = () => {
 
         } else {
             setError({ error: false, message: "" })
-            console.log("Iniciando función login");
             const body = {
                 "usuario": usuario,
                 "clave": clave,
@@ -40,12 +34,11 @@ const Login = () => {
             }
 
             try {
-                const respuesta = await axios.post('http://192.168.88.161:3000/suma/api/usuarios/autenticar_usuario', body, { mode: "cors" })
-                const json = await respuesta.data
-                console.log("Datos JSON:", json);
+                const respuesta = await conexionCliente.post('usuarios/autenticar_usuario', body, { mode: "cors" })
+                const data = await respuesta.data
 
-                if (json?.error) {
-                    setError({ error: true, message: json.message })
+                if (data?.error) {
+                    setError({ error: true, message: data.message })
                     setUsuario("")
                     setClave("")
                     setTimeout(() => {
@@ -53,16 +46,14 @@ const Login = () => {
                     }, 1500)
                     return
                 }
-                setAuthUsuario(json.usuario)
-                setAuthPerfil(json.perfiles)
-
-                localStorage.setItem("usuario", JSON.stringify(json.usuario));
-                localStorage.setItem("perfiles", JSON.stringify(json.perfiles));
-
-                navigate("/layout")
+                guardar_sesion(data)
 
             } catch (error) {
-                console.error("Error en la solicitud:", error)
+                setError({ error: true, message:"Ha ocurrido un error" })
+                setTimeout(() => {
+                    setError({ error: false, message: "" })
+                }, 1500)
+                return
             }
         }
     }

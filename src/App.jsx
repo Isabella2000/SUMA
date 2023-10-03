@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import AuthProvider from "../context/AuthProvider.jsx";
-import Login from "./components/Login.jsx";
+import AuthProvider from "./context/AuthProvider.jsx";
+import Login from "./Pages/Login.jsx";
 import Layout from "./layout/Layout.jsx";
 
 const App = () => {
@@ -9,12 +9,18 @@ const App = () => {
       <AuthProvider>
         <Routes>
           <Route index element={<Login />} />
-          <Route path="/layout" element={<Layout />}>
-            {/* <Route index element={<Login />} /> */}
-          </Route>
         </Routes>
+
+        {/* RUTAS DESPUES DE INICIAR SESION */}
+        
+        {/* <GlobalProvider> */}
+        <Routes>
+          <Route path="/layout" element={<Layout />} />
+        </Routes>
+        {/* </GlobalProvider> */}
+
       </AuthProvider>
-    </BrowserRouter>
+    </BrowserRouter >
   )
 }
 

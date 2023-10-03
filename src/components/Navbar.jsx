@@ -2,7 +2,7 @@ import { useState } from "react";
 import { MdOutlineDashboard } from "react-icons/md";
 import { BsChevronDown } from "react-icons/bs";
 import { BadgePlus, Building2, LogOut, User2, UserSquare2 } from "lucide-react";
-import useAuth from '../../hooks/useAuth'
+import useAuth from "../hooks/useAuth.jsx"
 
 
 const Menus = [
@@ -33,7 +33,7 @@ const Menus = [
 
 const Navbar = () => {
 
-    const { handleSalir } = useAuth()
+    const { handle_salir } = useAuth()
 
     const [Menu, SetMenu] = useState(Menus);
     const [open, setOpen] = useState(true);
@@ -129,7 +129,7 @@ const Navbar = () => {
                     {/* Agrega el botón "Salir" fuera del mapeo */}
                     <div className="mx-1 gap-x-4 flex">
                         <LogOut />
-                        {open && <span onClick={handleSalir}>Salir</span>}
+                        {open && <span onClick={handle_salir}>Salir</span>}
                     </div>
                 </div>
             </div>

@@ -1,6 +1,6 @@
 import Navbar from "../components/Navbar"
 import { Outlet, Navigate } from "react-router-dom"
-import useAuth from "../../hooks/useAuth"
+import useAuth from "../hooks/useAuth"
 
 const Layout = () => {
     const { authUsuario } = useAuth()
