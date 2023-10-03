@@ -2,6 +2,8 @@ import { useState } from "react";
 import { MdOutlineDashboard } from "react-icons/md";
 import { BsChevronDown } from "react-icons/bs";
 import { BadgePlus, Building2, LogOut, User2, UserSquare2 } from "lucide-react";
+import useAuth from '../../hooks/useAuth'
+
 
 const Menus = [
     { title: "Clientes", icon: <User2 /> },
@@ -18,7 +20,7 @@ const Menus = [
                 cName: "sub-nav",
             },
             {
-                title: "Lista de Usarios",
+                title: "Lista de Usuarios",
                 src: "/services/services2",
 
                 cName: "sub-nav",
@@ -30,6 +32,9 @@ const Menus = [
 ];
 
 const Navbar = () => {
+
+    const { handleSalir } = useAuth()
+
     const [Menu, SetMenu] = useState(Menus);
     const [open, setOpen] = useState(true);
     const setSubMenuOpen = (index) => {
@@ -47,8 +52,10 @@ const Navbar = () => {
     };
 
 
+
     return (
-        <div className="h-full flex flex-col border-r  shadow-sm">
+
+        <div className="h-full flex border-r shadow-sm">
             <button
                 className="fixed lg:hidden z-90 bottom-10 right-8 bg- bg-primaryYellow w-10 h-10 rounded-full drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-amber-500 duration-300"
                 onClick={toggleSidebar}
@@ -122,7 +129,7 @@ const Navbar = () => {
                     {/* Agrega el botón "Salir" fuera del mapeo */}
                     <div className="mx-1 gap-x-4 flex">
                         <LogOut />
-                        {open && <span>Salir</span>}
+                        {open && <span onClick={handleSalir}>Salir</span>}
                     </div>
                 </div>
             </div>
