@@ -1,7 +1,4 @@
 import { memo, useState } from "react";
-import { MdOutlineDashboard } from "react-icons/md";
-import { BsChevronDown } from "react-icons/bs";
-import { LogOut } from "lucide-react";
 import useAuth from "../hooks/useAuth.jsx";
 
 const Navbar = () => {
@@ -62,9 +59,9 @@ const Navbar = () => {
                             <span className=" text-xs text-gray-600">{correo}</span>
                         </div>
                     </div>
-                    <div onClick={cerrar_salir}  className={` ${open ? "w-40 p-2 mx-1 overflow-hidden transition-all duration-700 ease-in-out" : "w-14 p-2 mx-1 overflow-hidden transition-all duration-700 ease-in-out"
-                    } hover:bg-primaryYellow overflow-hidden transition-all duration-700 ease-in-out absolute inset-x-0 bottom-5 flex rounded-md cursor-pointer hover:bg-amarillo text-sm items-center`}>
-                        <LogOut />
+                    <div onClick={cerrar_salir} className={` ${open ? "w-40 p-2 mx-1 overflow-hidden transition-all duration-700 ease-in-out" : "w-14 p-2 mx-1 overflow-hidden transition-all duration-700 ease-in-out"
+                        } hover:bg-primaryYellow overflow-hidden transition-all duration-700 ease-in-out absolute inset-x-0 bottom-5 flex rounded-md cursor-pointer hover:bg-amarillo text-sm items-center`}>
+                        <i className="pi pi-sign-out" ></i>
                         {open && <span className="ml-1" >Salir</span>}
                     </div>
                 </div>
@@ -76,12 +73,12 @@ const Navbar = () => {
                                 className={`flex font-semibold rounded-md p-2 mx-2 cursor-pointer hover:bg-primaryYellow text-sm items-center gap-x-4 ${modulo.gap ? "mt-9" : "mt-2"
                                     }`}
                             >
-                                <div className="mx-1" >
-                                    {modulo.icon ? modulo.icon : <MdOutlineDashboard />}
+                                <div className="mx-1">
+                                    {modulo.icono ? <i className={`pi ${modulo.icono}`}></i> : <i className="pi pi-inbox "></i>}
                                 </div>
                                 {open && <span>{modulo.nombre_modulo}</span>}
                                 {open && modulo.menus && (
-                                    <BsChevronDown className={ modulo.isOpen && "rotate-180"} />
+                                    <i className={`pi pi-angle-down ${modulo.isOpen && "rotate-180"} `}></i>
                                 )}
                             </li>
 

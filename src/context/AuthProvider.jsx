@@ -1,8 +1,6 @@
 import { createContext } from "react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"
-// import {data} from "../Pages/Login.jsx"
-
 
 const AuthContext = createContext();
 

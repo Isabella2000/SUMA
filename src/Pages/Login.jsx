@@ -5,8 +5,6 @@ import Error from "../components/Error"
 import useAuth from '../hooks/useAuth'
 import conexionCliente from '../config/ConexionCliente'
 import ReCAPTCHA from "react-google-recaptcha";
-import { Eye } from 'lucide-react';
-import { InputGroup, Input, InputGroupText } from 'reactstrap';
 
 
 const Login = () => {
@@ -18,7 +16,9 @@ const Login = () => {
     const [clave, setClave] = useState("")
     const [error, setError] = useState({ error: false, message: '' })
 
-    const handleSubmit = async (e) => {
+    const [eye, setEye] = useState(false)
+
+    const handle_submit = async (e) => {
         e.preventDefault();
         if ([usuario, clave].includes("")) {
             setError({ error: true, message: "Hay campos vacios" })
@@ -40,9 +40,6 @@ const Login = () => {
                     setTimeout(() => setError({ error: false, message: "" }), 1500)
                     return
                 }
-
-                console.log(data)
-
                 guardar_sesion(data)
 
             } catch (error) {
@@ -51,6 +48,10 @@ const Login = () => {
                 return
             }
         }
+    }
+
+    const ver_contrasena = () => {
+        setEye(!eye)
     }
 
 
@@ -65,22 +66,19 @@ const Login = () => {
                             <div className="w-full sm:w-full md:w-1/2  lg:w-1/2  xl:w-1/2 p-4 flex justify-center items-center flex-col" >
                                 <h3 className="text-slate-900  mt-1 text-3xl font-semibold text-center ">Ingrese a <span className='text-primaryYellow'>SUMA</span></h3>
                                 <h4 className="text-slate-500  my-4 text-sm text-center">Sistema Unificado de Mejora y Autogestion</h4>
-                                <form onSubmit={e => handleSubmit(e)} id='mySelect' className="flex space-y-7 flex-col w-3/4">
+                                <form onSubmit={e => handle_submit(e)} id='mySelect' className="flex space-y-7 flex-col w-3/4">
                                     {error.error ? <Error>{error.message}</Error> : ""}
+                                    
                                     <div>
                                         <input className="w-full px-3 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-yellow-200" type="text" id="usuario" placeholder="Usuario" onChange={(e) => setUsuario(e.target.value)} value={usuario} />
                                     </div>
 
-                                    {/* <div>
-                                        <input className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-200" type="password" id="contrasena" placeholder="Contraseña" onChange={(e) => setClave(e.target.value)} value={clave} />
-                                    </div> */}
+                                    <div className="flex justify-between items-center w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-200 gap-1">
+                                        <input className='focus:outline-none w-100' type={eye ? "text" : "password"} id="contrasena" placeholder="Contraseña" onChange={(e) => setClave(e.target.value)} value={clave} />
+                                        <i onClick={ver_contrasena} className={eye ? "pi pi-eye" : "pi pi-eye-slash"}></i>
+                                    </div>
 
-                                    <InputGroup>
-                                        <Input placeholder="Contraseña" className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-200" type="password" id="contrasena" onChange={(e) => setClave(e.target.value)} value={clave} />
-                                        <InputGroupText>
-                                            <Eye />
-                                        </InputGroupText>
-                                    </InputGroup>
+
 
                                     <div className='recaptcha self-center'>
                                         <ReCAPTCHA
