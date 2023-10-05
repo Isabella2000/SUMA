@@ -11,23 +11,13 @@ const AuthProvider = ({ children }) => {
   const [authUsuario, setAuthUsuario] = useState({})
   const [authModulos, setAuthModulos] = useState([])
 
-  // useEffect(() => {
-  //   const usuario = JSON.parse(localStorage.getItem('usuario')) || {}
-  //   setAuthUsuario(usuario)
-  // }, [])
-
-
   useEffect(() => {
     const autenticarUsuario = async () => {
-      //Se extrae el JWT para aprobar el inicio de sesion.
-      const token = localStorage.getItem('token')
-      //  console.log(token)
+            const token = localStorage.getItem('token')
       if (!token) {
-        // setCargando(false)
         return
       }
 
-      //Bearer token y lo revisa en el checkout del backend.
       const config = {
         headers: {
           "Content-Type": "apllication/json",
@@ -37,9 +27,9 @@ const AuthProvider = ({ children }) => {
 
       try {
         const { data } = await conexionCliente('/usuarios/perfil', config)
+        console.log(data)
         setAuthUsuario(data)
         setAuthModulos(JSON.parse(localStorage.getItem('modulos')));
-        //Siempre que haya un token al iniciar, redireccionara a la pag principal.
         navigate('/home')
       } catch (error) {
         setAuthUsuario({})
@@ -50,23 +40,12 @@ const AuthProvider = ({ children }) => {
   }, [])
 
 
-  // const guardar_sesion = (data) => {
-  //   const { usuario, modulos } = data
-  //   setAuthUsuario(usuario)
-  //   setAuthModulos(modulos)
-  //   localStorage.setItem("usuario", JSON.stringify(usuario));
-
-  //   return true
-  // }
 
   const cerrar_salir = () => {
     setAuthUsuario({})
     setAuthModulos([])
     localStorage.removeItem('token')
     localStorage.removeItem('modulos')
-    // localStorage.setItem('usuario', JSON.stringify({}))
-    // localStorage.setItem('modulos', JSON.stringify([]))
-    // setAuthModulos([])
     navigate("/")
   }
 

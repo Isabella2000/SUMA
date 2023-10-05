@@ -1,4 +1,4 @@
-import Navbar from "../components/Navbar"
+import Sidebar from "../components/Sidebar"
 import { Outlet, Navigate } from "react-router-dom"
 import useAuth from "../hooks/useAuth"
 
@@ -9,7 +9,7 @@ const Layout = () => {
         <>
             {authUsuario.id_usuario ?
                 <div className="flex h-screen">
-                    <Navbar />
+                    <Sidebar />
                     <main>
                         <Outlet />
                     </main>

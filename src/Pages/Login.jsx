@@ -6,6 +6,8 @@ import conexionCliente from '../config/ConexionCliente'
 import ReCAPTCHA from "react-google-recaptcha";
 import { useNavigate } from 'react-router-dom'
 
+import { InputText } from 'primereact/inputtext';
+
 
 const Login = () => {
     const { setAuthUsuario, setAuthModulos } = useAuth()
@@ -35,7 +37,6 @@ const Login = () => {
 
             try {
                 const { data } = await conexionCliente.post('usuarios/autenticar_usuario', body, { mode: "cors" })
-                // const respuesta = await data
 
                 if (data?.error) {
                     setError({ error: true, message: data.message })
@@ -45,14 +46,10 @@ const Login = () => {
 
                 localStorage.setItem('token', data.usuario.token)
                 localStorage.setItem('modulos', JSON.stringify(data.modulos))
-
-
                 setAuthUsuario(data.usuario)
                 setAuthModulos(data.modulos)
-                // const sesion = guardar_sesion(data)
-                // if (sesion) {
                 navigate("/home")
-                // }
+
             } catch (error) {
                 console.log(error)
             }
@@ -73,12 +70,12 @@ const Login = () => {
                                 <input className="w-full px-3 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-yellow-200" type="text" id="usuario" placeholder="Usuario" onChange={(e) => setUsuario(e.target.value)} value={usuario} />
                             </div>
 
-                            <div className="flex justify-between items-center w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-200 gap-1">
-                                <input className='focus:outline-none w-100' type={eye ? "text" : "password"} id="contrasena" placeholder="Contraseña" onChange={(e) => setClave(e.target.value)} value={clave} />
+                            <div className="p-inputgroup flex-1">
+                                <InputText type={eye ? "text" : "password"} id="contrasena" placeholder="Contraseña" onChange={(e) => setClave(e.target.value)} value={clave} className=' focus:outline-none focus:ring-2 focus:ring-yellow-200 border rounded-l-lg px-3 py-2' />
+                                <span className="p-inputgroup-addon rounded-r-lg">
                                 <i onClick={e => setEye(!eye)} className={eye ? "pi pi-eye" : "pi pi-eye-slash"}></i>
+                                </span>
                             </div>
-
-
 
                             <div className='recaptcha self-center'>
                                 <ReCAPTCHA

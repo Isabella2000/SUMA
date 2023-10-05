@@ -1,5 +1,9 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
+import 'primereact/resources/themes/saga-blue/theme.css';
+import 'primereact/resources/primereact.min.css';
+import 'primeicons/primeicons.css';
+
 import { PrimeReactProvider } from 'primereact/api';
 import 'primeicons/primeicons.css';
 
@@ -10,6 +14,7 @@ import Home from './Pages/Home.jsx';
 import Layout from "./layout/Layout.jsx";
 import Usuarios from "./Pages/Usuarios.jsx";
 import AuthLayouth from './layout/AuthLayouth.jsx';
+
 
 const App = () => {
   return (
