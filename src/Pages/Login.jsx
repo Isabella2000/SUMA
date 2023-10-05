@@ -1,14 +1,14 @@
 import '../App.css'
 import { useRef, useState } from "react"
-import { Navigate } from "react-router-dom"
 import Error from "../components/Error"
 import useAuth from '../hooks/useAuth'
 import conexionCliente from '../config/ConexionCliente'
 import ReCAPTCHA from "react-google-recaptcha";
+import { useNavigate } from 'react-router-dom'
 
 
 const Login = () => {
-    const { authUsuario, guardar_sesion } = useAuth()
+    const { setAuthUsuario, setAuthModulos } = useAuth()
 
     const captcha = useRef(null)
 
@@ -18,11 +18,13 @@ const Login = () => {
 
     const [eye, setEye] = useState(false)
 
+    const navigate = useNavigate()
+
     const handle_submit = async (e) => {
         e.preventDefault();
         if ([usuario, clave].includes("")) {
             setError({ error: true, message: "Hay campos vacios" })
-            setTimeout(() => setError({ error: false, message: "" }), 1500)
+            setTimeout(() => { setError({ error: false, message: "" }) }, 1500)
             return
         } else {
             const body = {
@@ -32,70 +34,67 @@ const Login = () => {
             }
 
             try {
-                const respuesta = await conexionCliente.post('usuarios/autenticar_usuario', body, { mode: "cors" })
-                const data = await respuesta.data
+                const { data } = await conexionCliente.post('usuarios/autenticar_usuario', body, { mode: "cors" })
+                // const respuesta = await data
 
                 if (data?.error) {
                     setError({ error: true, message: data.message })
-                    setTimeout(() => setError({ error: false, message: "" }), 1500)
+                    setTimeout(() => { setError({ error: false, message: "" }) }, 1500)
                     return
                 }
-                guardar_sesion(data)
 
+                localStorage.setItem('token', data.usuario.token)
+                localStorage.setItem('modulos', JSON.stringify(data.modulos))
+
+
+                setAuthUsuario(data.usuario)
+                setAuthModulos(data.modulos)
+                // const sesion = guardar_sesion(data)
+                // if (sesion) {
+                navigate("/home")
+                // }
             } catch (error) {
-                setError({ error: true, message: "Ha ocurrido un error" })
-                setTimeout(() => setError({ error: false, message: "" }), 1500)
-                return
+                console.log(error)
             }
         }
     }
 
-    const ver_contrasena = () => {
-        setEye(!eye)
-    }
-
-
     return (
         <>
-            {
-                authUsuario.id_usuario ?
-                    <Navigate to="/home" />
-                    :
-                    <div className="h-screen flex items-center justify-center container mx-auto ">
-                        <div className='flex bg-white rounded-lg shadow-xl max-w-5xl flex-wrap' >
-                            <div className="w-full sm:w-full md:w-1/2  lg:w-1/2  xl:w-1/2 p-4 flex justify-center items-center flex-col" >
-                                <h3 className="text-slate-900  mt-1 text-3xl font-semibold text-center ">Ingrese a <span className='text-primaryYellow'>SUMA</span></h3>
-                                <h4 className="text-slate-500  my-4 text-sm text-center">Sistema Unificado de Mejora y Autogestion</h4>
-                                <form onSubmit={e => handle_submit(e)} id='mySelect' className="flex space-y-7 flex-col w-3/4">
-                                    {error.error ? <Error>{error.message}</Error> : ""}
-                                    
-                                    <div>
-                                        <input className="w-full px-3 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-yellow-200" type="text" id="usuario" placeholder="Usuario" onChange={(e) => setUsuario(e.target.value)} value={usuario} />
-                                    </div>
+            <div className="h-screen flex items-center justify-center container mx-auto ">
+                <div className='flex bg-white rounded-lg shadow-xl max-w-5xl flex-wrap' >
+                    <div className="w-full sm:w-full md:w-1/2  lg:w-1/2  xl:w-1/2 p-4 flex justify-center items-center flex-col" >
+                        <h3 className="text-slate-900  mt-1 text-3xl font-semibold text-center ">Ingrese a <span className='text-primaryYellow'>SUMA</span></h3>
+                        <h4 className="text-slate-500  my-4 text-sm text-center">Sistema Unificado de Mejora y Autogestion</h4>
+                        <form onSubmit={e => handle_submit(e)} id='mySelect' className="flex space-y-7 flex-col w-3/4">
+                            {error.error ? <Error>{error.message}</Error> : ""}
 
-                                    <div className="flex justify-between items-center w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-200 gap-1">
-                                        <input className='focus:outline-none w-100' type={eye ? "text" : "password"} id="contrasena" placeholder="Contraseña" onChange={(e) => setClave(e.target.value)} value={clave} />
-                                        <i onClick={ver_contrasena} className={eye ? "pi pi-eye" : "pi pi-eye-slash"}></i>
-                                    </div>
-
-
-
-                                    <div className='recaptcha self-center'>
-                                        <ReCAPTCHA
-                                            ref={captcha}
-                                            sitekey={import.meta.env.VITE_CAPTCHA_KEY}
-                                        />
-                                    </div>
-
-                                    <input type="submit" value="Ingresar" className="w-full px-4 py-2 border-2 border-primaryYellow rounded-lg bg-secundaryYellow hover:bg-primaryYellow font-bold" />
-                                </form>
+                            <div>
+                                <input className="w-full px-3 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-yellow-200" type="text" id="usuario" placeholder="Usuario" onChange={(e) => setUsuario(e.target.value)} value={usuario} />
                             </div>
-                            <div className=' rounded-r-lg w-full  md:w-1/2 lg:w-1/2 xl:w-1/2 hidden md:block'>
-                                <img src="/src/img/img_login.png" alt="" className='h-full rounded-r-lg' />
+
+                            <div className="flex justify-between items-center w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-200 gap-1">
+                                <input className='focus:outline-none w-100' type={eye ? "text" : "password"} id="contrasena" placeholder="Contraseña" onChange={(e) => setClave(e.target.value)} value={clave} />
+                                <i onClick={e => setEye(!eye)} className={eye ? "pi pi-eye" : "pi pi-eye-slash"}></i>
                             </div>
-                        </div>
+
+
+
+                            <div className='recaptcha self-center'>
+                                <ReCAPTCHA
+                                    ref={captcha}
+                                    sitekey={import.meta.env.VITE_CAPTCHA_KEY}
+                                />
+                            </div>
+
+                            <input type="submit" value="Ingresar" className="w-full px-4 py-2 border-2 border-primaryYellow rounded-lg bg-secundaryYellow hover:bg-primaryYellow font-bold" />
+                        </form>
                     </div>
-            }
+                    <div className=' rounded-r-lg w-full  md:w-1/2 lg:w-1/2 xl:w-1/2 hidden md:block'>
+                        <img src="/src/img/img_login.png" alt="" className='h-full rounded-r-lg' />
+                    </div>
+                </div>
+            </div>
         </>
     )
 }

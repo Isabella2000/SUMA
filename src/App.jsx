@@ -1,9 +1,15 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import AuthProvider from "./context/AuthProvider.jsx";
-import Login from "./Pages/Login.jsx";
-import Layout from "./layout/Layout.jsx";
-import { PrimeReactProvider, PrimeReactContext } from 'primereact/api';
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+
+import { PrimeReactProvider } from 'primereact/api';
 import 'primeicons/primeicons.css';
+
+import { AuthProvider } from './context/AuthProvider.jsx';
+
+import Login from "./Pages/Login.jsx";
+import Home from './Pages/Home.jsx';
+import Layout from "./layout/Layout.jsx";
+import Usuarios from "./Pages/Usuarios.jsx";
+import AuthLayouth from './layout/AuthLayouth.jsx';
 
 const App = () => {
   return (
@@ -11,19 +17,21 @@ const App = () => {
       <AuthProvider>
         <PrimeReactProvider>
           <Routes>
-            <Route index element={<Login />} />
-          </Routes>
+            {/* Area Publica */}
+            <Route path="/" element={<AuthLayouth />}>
+              <Route index element={<Login />} />
+            </Route>
 
-          {/* RUTAS DESPUES DE INICIAR SESION */}
+            {/* Area Privada */}
+            <Route path='/home' element={<Layout />}>
+              <Route index element={<Home />} />
+              <Route path="config/usuarios" element={<Usuarios />} />
+            </Route>
 
-          {/* <GlobalProvider> */}
-          <Routes>
-            <Route path="/home" element={<Layout />} />
           </Routes>
-          {/* </GlobalProvider> */}
         </PrimeReactProvider>
       </AuthProvider>
-    </BrowserRouter >
+    </BrowserRouter>
   )
 }
 
